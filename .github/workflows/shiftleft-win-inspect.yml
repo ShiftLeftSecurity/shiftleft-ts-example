@@ -30,7 +30,7 @@ jobs:
       with:
         java-version: 1.8
     - name: Analyze with Inspect
-      run: .\sl analyze --no-diagnostic --force --app ShiftLeftTSWin --tag branch=${GITHUB_REF} --js --cpg .
+      run: .\sl analyze --no-diagnostic --force --app ShiftLeftTSWin --tag branch=${GITHUB_REF} --js --cpg . -- --transpiling
       env:
         SHIFTLEFT_ORG_ID: ${{ secrets.SHIFTLEFT_ORG_ID }}
         SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
