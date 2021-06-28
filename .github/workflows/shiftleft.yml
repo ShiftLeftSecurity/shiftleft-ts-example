@@ -1,0 +1,26 @@
+# This workflow integrates ShiftLeft with GitHub
+# Visit https://docs.shiftleft.io for help
+name: Analyze with ShiftLeft
+
+on:
+  pull_request:
+
+jobs:
+  Inspect-Build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Download ShiftLeft cli
+      run: |
+        curl https://cdn.shiftleft.io/download/sl > ${GITHUB_WORKSPACE}/sl && chmod a+rx ${GITHUB_WORKSPACE}/sl
+
+    # ShiftLeft requires Java 1.8. Post the package step override the version
+    - name: Setup Java JDK
+      uses: actions/setup-java@v1.4.3
+      with:
+        java-version: 1.8
+    - name: Analyze
+      run: ${GITHUB_WORKSPACE}/sl analyze --no-diagnostic --force --app ShiftLeftTS --tag branch=${GITHUB_REF} --js --cpg . -- --transpiling
+      env:
+        SHIFTLEFT_ORG_ID: ${{ secrets.SHIFTLEFT_ORG_ID }}
+        SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
